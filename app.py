@@ -86,9 +86,9 @@ else:
                         message_placeholder.markdown(full_response + "▌")
                     message_placeholder.markdown(full_response)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
-        except:
-            st.error("""
-                **Ha ocurrido un error inesperado.**\n
-                Por favor, intenta de nuevo más tarde.""",
-            )
+        # except:
+        #     st.error("""
+        #         **Ha ocurrido un error inesperado.**\n
+        #         Por favor, intenta de nuevo más tarde.""",
+            # )
     
