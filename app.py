@@ -51,7 +51,7 @@ try:
                     chain = load_qa_chain(LangOpenAI(openai_api_key=openai_api_key))
                     answer = chain.run(input_documents=docs, question=query)
                     st.code(answer, language=None)
-        
+try:
         elif option == options["chat"]:
                 st.header("Get answers, information, and solutions to your academic queries.")
 
