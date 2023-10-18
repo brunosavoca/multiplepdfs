@@ -54,41 +54,41 @@ else:
         except:
             st.error("An error occurred. Please try again.")
     
-elif option == options["chat"]:
-    try:
-        st.header("Obtén respuestas, información y solución a cualquier duda.")
-        if "messages" not in st.session_state:
-            st.session_state.messages = []
-
-        openai.api_key = openai_api_key
-        for message in st.session_state.messages:
-                with st.chat_message(message["role"]):
-                    st.markdown(message["content"])
-
-        if prompt := st.chat_input("haz una pregunta"):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
-            with st.chat_message("assistant"):
-                message_placeholder = st.empty()
-                full_response = ""
-                messages_list = [
-                    {"role": "system", "content": "Your name is InfoGPT. You're an assistant that helps journalists in daily tasks, writing in Spanish in the style of the New York Times.\
-                                                You can only help with tasks related to writing articles, and you can't help with other tasks.\
-                                                Before or after giving respones, don't include any other information that is not related to the task, for example explanations."}
-                ]
-                messages_list += [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
-                
-                for response in openai.ChatCompletion.create(
-                    model="gpt-4",
-                    messages=messages_list, stream=True):
-                    full_response += response.choices[0].delta.get("content", "")
-                    message_placeholder.markdown(full_response + "▌")
-                message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-    except:
-        st.error("""
-            **Ha ocurrido un error inesperado.**\n
-            Por favor, intenta de nuevo más tarde.""",
-        )
-
+    elif option == options["chat"]:
+        try:
+            st.header("Obtén respuestas, información y solución a cualquier duda.")
+            if "messages" not in st.session_state:
+                st.session_state.messages = []
+    
+            openai.api_key = openai_api_key
+            for message in st.session_state.messages:
+                    with st.chat_message(message["role"]):
+                        st.markdown(message["content"])
+    
+            if prompt := st.chat_input("haz una pregunta"):
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                with st.chat_message("user"):
+                    st.markdown(prompt)
+                with st.chat_message("assistant"):
+                    message_placeholder = st.empty()
+                    full_response = ""
+                    messages_list = [
+                        {"role": "system", "content": "Your name is InfoGPT. You're an assistant that helps journalists in daily tasks, writing in Spanish in the style of the New York Times.\
+                                                    You can only help with tasks related to writing articles, and you can't help with other tasks.\
+                                                    Before or after giving respones, don't include any other information that is not related to the task, for example explanations."}
+                    ]
+                    messages_list += [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+                    
+                    for response in openai.ChatCompletion.create(
+                        model="gpt-4",
+                        messages=messages_list, stream=True):
+                        full_response += response.choices[0].delta.get("content", "")
+                        message_placeholder.markdown(full_response + "▌")
+                    message_placeholder.markdown(full_response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+        except:
+            st.error("""
+                **Ha ocurrido un error inesperado.**\n
+                Por favor, intenta de nuevo más tarde.""",
+            )
+    
