@@ -51,43 +51,5 @@ try:
                     chain = load_qa_chain(LangOpenAI(openai_api_key=openai_api_key))
                     answer = chain.run(input_documents=docs, question=query)
                     st.code(answer, language=None)
-# try:
-#         elif option == options["chat"]:
-#                 st.header("Get answers, information, and solutions to your academic queries.")
-
-#                 # Initialize session state variables if they don't exist
-#                 if 'generated' not in st.session_state:
-#                     st.session_state['generated'] = []
-            
-#                 if 'past' not in st.session_state:
-#                     st.session_state['past'] = []
-            
-#                 # Function to send a query to the Hugging Face API
-#                 def query(payload):
-#                     response = requests.post(API_URL, headers=headers, json=payload)
-#                     return response.json()
-            
-#                 # Text input for the user
-#                 user_input = st.text_input("You: ", "Hello, how are you?", key="input")
-            
-#                 # Sending user input to the chat model and receiving a response
-#                 if user_input:
-#                     output = query({
-#                         "inputs": {
-#                             "past_user_inputs": st.session_state.past,
-#                             "generated_responses": st.session_state.generated,
-#                             "text": user_input,
-#                         },
-#                         "parameters": {"repetition_penalty": 1.33},
-#                     })
-            
-#                     # Save chat history to session state
-#                     st.session_state.past.append(user_input)
-#                     st.session_state.generated.append(output["generated_text"])
-            
-#                 # Display the chat history
-#                 if st.session_state['generated']:
-#                     for i in range(len(st.session_state['generated']) - 1, -1, -1):            
-#                         message(st.session_state["generated"][i], key=str(i))
-#                         message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
-
+# except Exception as e:
+#     st.error(f"An error occurred: {e}")
