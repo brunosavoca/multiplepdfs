@@ -43,12 +43,12 @@ elif option == options["document"]:
             raw_text = ''.join([page.extract_text() for page in reader.pages if page.extract_text()])
             text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
             texts = text_splitter.split_text(raw_text)
-            embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+            embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
             docsearch = FAISS.from_texts(texts, embeddings)
             query = st.text_input("What do you want to know from this document?", "Provide a brief summary of this document.")
             if st.button("Search"):
                 docs = docsearch.similarity_search(query)
-                chain = load_qa_chain(LangOpenAI(openai_api_key=api_key))
+                chain = load_qa_chain(LangOpenAI(openai_api_key=openai_api_key))
                 answer = chain.run(input_documents=docs, question=query)
                 st.code(answer, language=None)
     except:
@@ -60,7 +60,8 @@ elif option == options["chat"]:
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
-        openai.api_key = api_key
+        openai.api_key = openai_api_key
+    
 
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
