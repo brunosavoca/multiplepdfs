@@ -49,3 +49,38 @@ elif option == options["document"]:
                 st.code(answer, language=None)
     except:
         st.error("An error occurred. Please try again.")
+
+elif option == options["chat"]:
+    try:
+        st.header("Get answers, information, and solutions to your academic queries.")
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
+
+        openai.api_key = openai_api_key
+
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        if prompt := st.chat_input("Ask a question"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                messages_list = [
+                    {"role": "system", "content": "Your name is StudyAid. You're an AI assistant specialized in helping students with academic tasks, providing guidance in English or any other relevant language."}
+                ]
+                messages_list += [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+                
+                for response in openai.ChatCompletion.create(
+                    model="gpt-4",
+                    messages=messages_list, stream=True):
+                    full_response += response.choices[0].delta.get("content", "")
+                    message_placeholder.markdown(full_response + "▌")
+                
+                message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+    except:
+        st.error("An unexpected error occurred. Please try again later.")
+
