@@ -12,7 +12,10 @@ import openai
 st.set_page_config(page_title="StudyAid", page_icon="📚", layout="wide")
 
 # API Key
-openai_api_key = st.secrets["api_key"]
+with st.sidebar:
+    openai_api_key = st.text_input("Enter OpenAI API Key", type="password")
+    if not openai_api_key:
+        st.warning("API key is required to use the app.")
 
 # Sidebar
 options = {
