@@ -54,7 +54,7 @@ else:
         except:
             st.error("An error occurred. Please try again.")
     
-    elif option == options["chat"]:
+elif option == options["chat"]:
     try:
         st.header("Obtén respuestas, información y solución a cualquier duda.")
         if "messages" not in st.session_state:
