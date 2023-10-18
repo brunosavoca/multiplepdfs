@@ -17,7 +17,8 @@ openai_api_key = st.secrets["api_key"]
 # Sidebar
 options = {
     "home": "Home",
-    "document": "Document Interactions",
+    "chat": "Chat",
+    "document": "Document Interactions"
 }
 
 with st.sidebar:
