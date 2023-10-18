@@ -15,7 +15,7 @@ try:
     # Sidebar
     options = {
         "home": "Home",
-        "chat": "Chat",
+        # "chat": "Chat",
         "document": "Document Interactions"
     }
 
