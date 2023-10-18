@@ -53,35 +53,41 @@ try:
                     st.code(answer, language=None)
         
         elif option == options["chat"]:
-            st.header("Get answers, information, and solutions to your academic queries.")
-            if "messages" not in st.session_state:
-                st.session_state.messages = []
+    st.header("Get answers, information, and solutions to your academic queries.")
 
-            openai.api_key = openai_api_key
+    # Initialize session state variables if they don't exist
+    if 'generated' not in st.session_state:
+        st.session_state['generated'] = []
 
-            for message in st.session_state.messages:
-                with st.chat_message(message["role"]):
-                    st.markdown(message["content"])
+    if 'past' not in st.session_state:
+        st.session_state['past'] = []
 
-            if prompt := st.chat_input("Ask a question"):
-                st.session_state.messages.append({"role": "user", "content": prompt})
-                with st.chat_message("user"):
-                    st.markdown(prompt)
-                with st.chat_message("assistant"):
-                    message_placeholder = st.empty()
-                    full_response = ""
-                    messages_list = [
-                        {"role": "system", "content": "Your name is StudyAid. You're an AI assistant specialized in helping students with academic tasks."}
-                    ]
-                    messages_list += [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+    # Function to send a query to the Hugging Face API
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()
 
-                    for response in openai.ChatCompletion.create(
-                        model="gpt-4",
-                        messages=messages_list, stream=True):
-                        full_response += response.choices[0].delta.get("content", "")
-                        message_placeholder.markdown(full_response + "▌")
-                    message_placeholder.markdown(full_response)
-                st.session_state.messages.append({"role": "assistant", "content": full_response})
-except Exception as e:
-    st.error(f"An unexpected error occurred: {e}")
-    raise e
+    # Text input for the user
+    user_input = st.text_input("You: ", "Hello, how are you?", key="input")
+
+    # Sending user input to the chat model and receiving a response
+    if user_input:
+        output = query({
+            "inputs": {
+                "past_user_inputs": st.session_state.past,
+                "generated_responses": st.session_state.generated,
+                "text": user_input,
+            },
+            "parameters": {"repetition_penalty": 1.33},
+        })
+
+        # Save chat history to session state
+        st.session_state.past.append(user_input)
+        st.session_state.generated.append(output["generated_text"])
+
+    # Display the chat history
+    if st.session_state['generated']:
+        for i in range(len(st.session_state['generated']) - 1, -1, -1):
+            message(st.session_state["generated"][i], key=str(i))
+            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+
