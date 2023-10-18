@@ -51,5 +51,5 @@ try:
                     chain = load_qa_chain(LangOpenAI(openai_api_key=openai_api_key))
                     answer = chain.run(input_documents=docs, question=query)
                     st.code(answer, language=None)
-# except Exception as e:
-#     st.error(f"An error occurred: {e}")
+except Exception as e:
+    st.error(f"An error occurred: {e}")
